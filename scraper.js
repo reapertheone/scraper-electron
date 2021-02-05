@@ -1,7 +1,8 @@
 const { JSDOM } = require('jsdom')
 const fetch     = require('node-fetch')
 const {ipcRenderer}     = require('electron')
-const fs        =require('fs')
+const fs        = require('fs')
+const path      = require('path')
 
 class Scraper{
     constructor(url,filename){
@@ -11,6 +12,7 @@ class Scraper{
         this.totalPage=null
         //this.name=name
         this.addresses=[]
+        this.path=null
     }
 
     fetching=async function(){
@@ -30,6 +32,7 @@ class Scraper{
                 
             }
             this.status=Math.floor((i/this.totalPage)*100)
+            ipcRenderer.send('status:update',this.status)
             
         }
     }
@@ -44,11 +47,18 @@ class Scraper{
     }
 
     save=async function(){
+        let folderPath=path.join(__dirname,`./output_files`)
+        let filePath=path.join(folderPath,`${this.filename}_${new Date().getTime()}.json`)
         let data=JSON.stringify(this.addresses)
-        fs.writeFile(`./${this.filename}.json`,data.split('\",').join('\",\n'),(err)=>{
+        fs.writeFile(filePath,data.split('\",').join('\",\n'),(err)=>{
             if(err) throw err;
-            console.log(`/${this.filename}.json is ready`)
+            if (!fs.existsSync(folderPath)){
+                fs.mkdirSync(folderPath);
+            }
+            console.log(`${filePath}`)
+           
         })
+        this.path=filePath
     }
     
 }

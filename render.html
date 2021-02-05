@@ -1,0 +1,30 @@
+<head>
+
+</head>
+<body>
+    <p></p>
+
+    <script>
+        const {ipcRenderer} = require('electron')
+        const Scraper = require('./scraper')
+        
+        ipcRenderer.send('render:ready')
+
+        ipcRenderer.on('new:scrape',async (event,url,fileName)=>{
+            document.title=url
+            scraper=new Scraper(url,fileName)
+            await scraper.getPage()
+            await scraper.fetching()
+            await scraper.save()
+            ipcRenderer.send('doc:ready',scraper.path)
+            
+
+        })
+
+        ipcRenderer.on('update',(event,status)=>{
+            document.querySelector('p').innerHTML=status
+            
+        })
+        
+    </script>
+</body>

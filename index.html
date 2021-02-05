@@ -4,25 +4,36 @@
 <body>
     
         <div>
+            <label for="webUrl">Ingatlan.com http address no pagination</label>
+            <br>
             <input type="url"  id="webUrl" placeholder="Copy and paste ingatlan.com url"><br>
-            <label>Filename with extension</label>
+            <label>Filename without extension</label><br>
             <input type="text" id="filename" placeholder="Plain text filename">
             
             <br>
         </div>
-            <button id="submit">Sumbit</button>
+            <button  id="submit">Submit</button>
+
+            <ul>
+
+            </ul>
         
     
     <script>
         const electron = require('electron')
         const {ipcRenderer} = electron
 
-        document.querySelector('#submit').addEventListener('click',(e)=>{
+            let btn=document.querySelector('#submit')
+            btn.addEventListener('click',(e)=>{
             e.preventDefault()
-            const webUrlValue = document.querySelector('#webUrl').value
-            const fileNameValue=document.querySelector('#filename').value
+            const webUrlValue = document.querySelector('#webUrl')
+            const fileNameValue=document.querySelector('#filename')
 
-            ipcRenderer.send('newScrapingInfo',webUrlValue,fileNameValue)
+            ipcRenderer.send('newScrapingInfo',webUrlValue.value,fileNameValue.value)
+            
+            webUrlValue=""
+            fileNameValue=""
+            btn.removeEventListener('click')
             debugger
 
         })
@@ -31,6 +42,30 @@
             let p=document.createElement('p').innerHTML=status
             document.appendChild(p)
     
+    })
+
+    ipcRenderer.on('task:ready',(event,path)=>{
+        let li = document.createElement('li')
+        let a= document.createElement('a')
+        a.href=path
+        a.target='_blank'
+        a.text=path
+        li.appendChild(a)
+        let ul=document.querySelector('ul')
+        ul.append(li)
+        btn.addEventListener('click',(e)=>{
+            e.preventDefault()
+            const webUrlValue = document.querySelector('#webUrl')
+            const fileNameValue=document.querySelector('#filename')
+            
+            btn.removeEventListener('click')
+            ipcRenderer.send('newScrapingInfo',webUrlValue.value,fileNameValue.value)
+            webUrlValue.value=""
+            fileNameValue.value=""
+            
+            debugger
+
+        })
     })
     </script>
 </body>

@@ -3,23 +3,32 @@ const Scraper                       =require('./scraper');
 
 let mainWindow;
 let renderWindow;
-let scraper;
 let url;
 let filename;
 
 
 app.on('ready',()=>{
     mainWindow=new BrowserWindow({
+        
         webPreferences:{
             nodeIntegration:true
         }
     })
     mainWindow.loadURL(`${__dirname}/index.html`)
+
+    mainWindow.on('closed',()=>{
+        app.quit()
+    })
 })
 
 ipcMain.on('newScrapingInfo',async (event,webUrl,fileName)=>{
     console.log(webUrl,fileName)
     renderWindow=new BrowserWindow({
+        resizable:false,
+        width:200,
+        height:150,
+        backgroundThrottling:false,
+        frame:false,
         webPreferences:{
                             nodeIntegration:true
         }
@@ -52,6 +61,11 @@ renderWindow.webContents.send('new:scrape',url,filename)
 })
 
 ipcMain.on('doc:ready',(event,filePath)=>{
-    console.log(filePath)
+    mainWindow.webContents.send('task:ready',filePath)
+    renderWindow.close()
+    renderWindow=null
+    url=null
+    filname=null
+
 })
-    
+

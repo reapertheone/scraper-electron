@@ -45,9 +45,10 @@
 
             ipcRenderer.send('newScrapingInfo',webUrlValue.value,fileNameValue.value)
             
-            webUrlValue=""
-            fileNameValue=""
-            btn.removeEventListener('click')
+            webUrlValue.value=""
+            fileNameValue.value=""
+            btn.toggleAttribute('disabled')
+
             debugger
 
         })
@@ -67,19 +68,7 @@
         li.appendChild(a)
         let ul=document.querySelector('ul')
         ul.append(li)
-        btn.addEventListener('click',(e)=>{
-            e.preventDefault()
-            const webUrlValue = document.querySelector('#webUrl')
-            const fileNameValue=document.querySelector('#filename')
-            
-            btn.removeEventListener('click')
-            ipcRenderer.send('newScrapingInfo',webUrlValue.value,fileNameValue.value)
-            webUrlValue.value=""
-            fileNameValue.value=""
-            
-            debugger
-
-        })
+        btn.toggleAttribute('disabled')
     })
     </script>
 </body>

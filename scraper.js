@@ -6,7 +6,7 @@ const path      = require('path')
 
 class Scraper{
     constructor(url,filename){
-        this.filename=filename
+        this.filename=filename.split(' ').join('_').split('.').join('_')
         this.url=url
         this.status=null
         this.totalPage=null

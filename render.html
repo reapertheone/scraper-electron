@@ -39,7 +39,7 @@
         ipcRenderer.send('render:ready')
 
         ipcRenderer.on('new:scrape',async (event,url,fileName)=>{
-            document.title=url
+            document.title=`Scraping - ${url}`
             scraper=new Scraper(url,fileName)
             await scraper.getPage()
             await scraper.fetching()

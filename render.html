@@ -3,16 +3,35 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<style>
+    .progress{
+        margin-top:15%;
+    }
+    p{
+        text-align: center;
+    }
+    h3{
+        text-align:center;
+    }
+    .container-fluid{
+        text-align: center;
+    }
+</style>
+
 </head>
 <body>
+    <h3>Progress:</h3>
     <div class="container-fluid">
+        
     <div class="progress">
         <div id="progBar" class="progress-bar" style="width:0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
+    
+
+    <p>Just starting...</p>
+
+    <button class="btn btn-danger"id="cancel">Cancel</button>
     </div>
-
-    <p></p>
-
     <script>
         const {ipcRenderer} = require('electron')
         const Scraper = require('./scraper')
@@ -33,6 +52,12 @@
         ipcRenderer.on('update',(event,status)=>{
             document.querySelector('p').innerHTML=`${status} %`
             document.querySelector('#progBar').style.width=`${status}%`
+        })
+
+        let cancel=document.querySelector('#cancel')
+        cancel.addEventListener('click',()=>{
+            ipcRenderer.send('abort')
+
         })
         
     </script>

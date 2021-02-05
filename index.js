@@ -25,8 +25,8 @@ ipcMain.on('newScrapingInfo',async (event,webUrl,fileName)=>{
     console.log(webUrl,fileName)
     renderWindow=new BrowserWindow({
         resizable:false,
-        width:200,
-        height:150,
+        width:300,
+        height:200,
         backgroundThrottling:false,
         frame:false,
         webPreferences:{
@@ -48,6 +48,11 @@ ipcMain.on('newScrapingInfo',async (event,webUrl,fileName)=>{
     //console.log(scraper.totalPage)
 
     
+})
+
+ipcMain.on('abort',()=>{
+    renderWindow.close();
+    renderWindow=null
 })
 
 ipcMain.on('status:update',(event,status)=>{

@@ -1,0 +1,36 @@
+<head>
+    <title>Scraper GUI</title>
+</head>
+<body>
+    
+        <div>
+            <input type="url"  id="webUrl" placeholder="Copy and paste ingatlan.com url"><br>
+            <label>Filename with extension</label>
+            <input type="text" id="filename" placeholder="Plain text filename">
+            
+            <br>
+        </div>
+            <button id="submit">Sumbit</button>
+        
+    
+    <script>
+        const electron = require('electron')
+        const {ipcRenderer} = electron
+
+        document.querySelector('#submit').addEventListener('click',(e)=>{
+            e.preventDefault()
+            const webUrlValue = document.querySelector('#webUrl').value
+            const fileNameValue=document.querySelector('#filename').value
+
+            ipcRenderer.send('newScrapingInfo',webUrlValue,fileNameValue)
+            debugger
+
+        })
+
+        ipcRenderer.on('update',(event,status)=>{
+            let p=document.createElement('p').innerHTML=status
+            document.appendChild(p)
+    
+    })
+    </script>
+</body>

@@ -1,6 +1,7 @@
 # scraper-electron
 electron gui for scraper
 
+This project is made only for experimental purposes
 
 usage:
 

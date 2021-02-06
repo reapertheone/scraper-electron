@@ -1,11 +1,13 @@
-const { app, ipcMain, BrowserWindow}=require('electron')
+const { app, ipcMain, BrowserWindow, Notification }=require('electron')
 const Scraper                       =require('./scraper');
 
 let mainWindow;
 let renderWindow;
 let url;
 let filename;
+let notification
 
+app.setAppUserModelId(process.execPath)
 
 app.on('ready',()=>{
     mainWindow=new BrowserWindow({
@@ -19,6 +21,7 @@ app.on('ready',()=>{
     mainWindow.on('closed',()=>{
         app.quit()
     })
+    
 })
 
 ipcMain.on('newScrapingInfo',async (event,webUrl,fileName)=>{
@@ -58,6 +61,7 @@ ipcMain.on('abort',()=>{
 ipcMain.on('status:update',(event,status)=>{
     mainWindow.webContents.send('update',status)
     renderWindow.webContents.send('update',status)
+    renderWindow.setProgressBar(status/100)
 })
 
 ipcMain.on('render:ready',(event)=>{
@@ -67,6 +71,13 @@ renderWindow.webContents.send('new:scrape',url,filename)
 
 ipcMain.on('doc:ready',(event,filePath)=>{
     mainWindow.webContents.send('task:ready',filePath)
+        notification=new Notification({
+        title:"Scraping is ready",
+        body:`You can find it on route : ${filePath}` 
+    }).show()
+
+    
+    notification=null
     renderWindow.close()
     renderWindow=null
     url=null

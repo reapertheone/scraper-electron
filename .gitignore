@@ -103,4 +103,5 @@ dist
 # TernJS port file
 .tern-port
 node_modules
-output_folder/*.json
+output_folder/
+
